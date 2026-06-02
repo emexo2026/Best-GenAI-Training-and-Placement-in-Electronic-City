@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI Training in Electronic City | Emexo Technologies</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --plum: #3b1a4a;
+    --plum-deep: #210e30;
+    --gold: #c9a227;
+    --gold-light: #f0c94a;
+    --charcoal: #1a1a2e;
+    --charcoal-mid: #2a2a3e;
+    --white: #f5f0eb;
+    --muted: #9e94b0;
+    --accent: #7b3fa0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--charcoal);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 4vw;
+    background: rgba(26,26,46,0.85);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(201,162,39,0.15);
+  }
+  nav img { height: 38px; }
+  nav .nav-links { display: flex; gap: 2rem; }
+  nav .nav-links a {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem; font-weight: 600;
+    color: var(--muted); text-decoration: none;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    transition: color .25s;
+  }
+  nav .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--plum-deep) !important;
+    padding: 0.5rem 1.4rem;
+    border-radius: 6px;
+    font-weight: 700 !important;
+    transition: transform .2s, box-shadow .2s !important;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,162,39,.4) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 8rem 6vw 4rem;
+    position: relative;
+    background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(123,63,160,0.25) 0%, transparent 70%),
+                linear-gradient(180deg, var(--plum-deep) 0%, var(--charcoal) 100%);
+    overflow: hidden;
+  }
+
+  /* Animated orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: drift 8s ease-in-out infinite alternate;
+  }
+  .orb-1 { width: 500px; height: 500px; background: rgba(123,63,160,0.3); top: -100px; left: -150px; animation-delay: 0s; }
+  .orb-2 { width: 400px; height: 400px; background: rgba(201,162,39,0.15); bottom: -50px; right: -100px; animation-delay: -4s; }
+  .orb-3 { width: 300px; height: 300px; background: rgba(59,26,74,0.5); top: 30%; right: 10%; animation-delay: -2s; }
+
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(30px,20px) scale(1.08); }
+  }
+
+  /* Gold grid lines */
+  .hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(201,162,39,0.1);
+    border: 1px solid rgba(201,162,39,0.3);
+    border-radius: 100px;
+    padding: 0.35rem 1rem;
+    font-size: 0.78rem; font-weight: 600;
+    color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp .8s ease both;
+    position: relative; z-index: 1;
+  }
+  .hero-badge::before { content: '★'; font-size: 0.7rem; }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp .9s .15s ease both;
+    position: relative; z-index: 1;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--muted); max-width: 680px;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 1s .3s ease both;
+    position: relative; z-index: 1;
+  }
+
+  .hero-btns {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 1s .45s ease both;
+    position: relative; z-index: 1;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--plum-deep);
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 0.95rem;
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(201,162,39,.4); }
+
+  .btn-secondary {
+    border: 1px solid rgba(201,162,39,0.4);
+    color: var(--gold);
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 0.95rem;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+    transition: background .2s, transform .2s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-secondary:hover { background: rgba(201,162,39,0.1); transform: translateY(-3px); }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    color: var(--muted); font-size: 0.75rem; letter-spacing: 0.1em;
+    animation: fadeUp 1s .8s ease both, bounce 2s 2s ease-in-out infinite;
+    z-index: 1;
+  }
+  .scroll-hint::after {
+    content: '';
+    width: 1px; height: 40px;
+    background: linear-gradient(var(--gold), transparent);
+    animation: grow 2s ease-in-out infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+  @keyframes grow { 0%,100%{opacity:0;transform:scaleY(0)} 50%{opacity:1;transform:scaleY(1)} }
+
+  /* Hero image */
+  .hero-img-wrap {
+    margin-top: 4rem;
+    position: relative; z-index: 1;
+    width: 100%; max-width: 900px;
+    animation: fadeUp 1s .6s ease both;
+  }
+  .hero-img-wrap::before {
+    content: '';
+    position: absolute; inset: -2px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--gold), var(--accent), var(--plum));
+    z-index: -1;
+    animation: rotateBorder 4s linear infinite;
+  }
+  @keyframes rotateBorder {
+    from { filter: hue-rotate(0deg); }
+    to   { filter: hue-rotate(360deg); }
+  }
+  .hero-img-wrap img {
+    width: 100%; border-radius: 14px; display: block;
+    border: 2px solid transparent;
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 6rem 6vw; }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .section-label::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+
+  h2.section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800; line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  h2.section-title span { color: var(--gold); }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 1.05rem; line-height: 1.8;
+    max-width: 680px;
+    margin-bottom: 3rem;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: linear-gradient(135deg, var(--plum-deep), var(--charcoal-mid));
+    border-top: 1px solid rgba(201,162,39,0.15);
+    border-bottom: 1px solid rgba(201,162,39,0.15);
+    padding: 2rem 6vw;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem; font-weight: 800;
+    color: var(--gold);
+    display: block;
+    animation: countUp 2s ease both;
+  }
+  .stat-label {
+    font-size: 0.82rem; color: var(--muted);
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+
+  /* ── CHALLENGES SECTION ── */
+  .challenges {
+    background: var(--plum-deep);
+    position: relative; overflow: hidden;
+  }
+  .challenges::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(123,63,160,0.3) 0%, transparent 70%);
+  }
+
+  .challenges-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .challenges-grid img {
+    width: 100%; border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    transition: transform .4s;
+  }
+  .challenges-grid img:hover { transform: scale(1.02); }
+
+  /* ── FEATURES / CARDS ── */
+  .features { background: var(--charcoal); }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .feature-card {
+    background: linear-gradient(135deg, rgba(59,26,74,0.5), rgba(26,26,46,0.8));
+    border: 1px solid rgba(201,162,39,0.12);
+    border-radius: 14px;
+    padding: 2rem;
+    position: relative; overflow: hidden;
+    transition: transform .3s, border-color .3s, box-shadow .3s;
+    cursor: default;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform .4s;
+  }
+  .feature-card:hover { transform: translateY(-6px); border-color: rgba(201,162,39,0.35); box-shadow: 0 20px 40px rgba(0,0,0,.4); }
+  .feature-card:hover::before { transform: scaleX(1); }
+
+  .feature-icon {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, rgba(201,162,39,0.2), rgba(123,63,160,0.2));
+    border: 1px solid rgba(201,162,39,0.3);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+  }
+  .feature-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+  .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── IMAGE SHOWCASE ── */
+  .showcase { background: var(--plum-deep); }
+
+  .showcase-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .showcase-layout.reverse { direction: rtl; }
+  .showcase-layout.reverse > * { direction: ltr; }
+  .showcase-layout img {
+    width: 100%; border-radius: 12px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.5);
+    transition: transform .4s, box-shadow .4s;
+  }
+  .showcase-layout img:hover { transform: scale(1.025); box-shadow: 0 32px 80px rgba(0,0,0,.6); }
+
+  .img-caption {
+    font-size: 0.78rem; color: var(--muted);
+    margin-top: 0.75rem; font-style: italic;
+  }
+
+  /* ── CAREER TRACKS ── */
+  .career { background: var(--charcoal); }
+
+  .track-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 3rem; }
+
+  .track-item {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    background: linear-gradient(135deg, rgba(59,26,74,0.4), rgba(26,26,46,0.6));
+    border: 1px solid rgba(201,162,39,0.1);
+    border-radius: 14px;
+    padding: 1.8rem;
+    transition: border-color .3s, transform .3s;
+  }
+  .track-item:hover { border-color: rgba(201,162,39,0.3); transform: translateX(6px); }
+
+  .track-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem; font-weight: 800;
+    color: rgba(201,162,39,0.2);
+    line-height: 1; flex-shrink: 0;
+    width: 40px;
+  }
+  .track-content h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem; font-weight: 700;
+    margin-bottom: 0.5rem; color: var(--white);
+  }
+  .track-content p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── FAQ ── */
+  .faq { background: var(--plum-deep); }
+
+  .faq-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 3rem; }
+
+  .faq-item {
+    border: 1px solid rgba(201,162,39,0.12);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(26,26,46,0.5);
+    transition: border-color .3s;
+  }
+  .faq-item.open { border-color: rgba(201,162,39,0.35); }
+
+  .faq-q {
+    padding: 1.3rem 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.95rem; gap: 1rem;
+    user-select: none;
+  }
+  .faq-q .faq-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(201,162,39,0.1); border: 1px solid rgba(201,162,39,0.3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 1.1rem; flex-shrink: 0;
+    transition: transform .3s, background .3s;
+  }
+  .faq-item.open .faq-icon { transform: rotate(45deg); background: rgba(201,162,39,0.25); }
+
+  .faq-a {
+    max-height: 0; overflow: hidden;
+    transition: max-height .4s ease, padding .3s;
+    padding: 0 1.5rem;
+    font-size: 0.9rem; color: var(--muted); line-height: 1.8;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding: 0 1.5rem 1.3rem; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: linear-gradient(135deg, var(--plum-deep), var(--charcoal-mid));
+    text-align: center;
+    padding: 7rem 6vw;
+    position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(123,63,160,0.3) 0%, transparent 70%);
+  }
+  .cta-section h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800; margin-bottom: 1rem;
+    position: relative; z-index: 1;
+  }
+  .cta-section h2 span { color: var(--gold); }
+  .cta-section p {
+    color: var(--muted); font-size: 1.1rem;
+    margin-bottom: 2.5rem; position: relative; z-index: 1;
+  }
+  .cta-section .btn-primary { position: relative; z-index: 1; font-size: 1.05rem; padding: 1rem 2.5rem; }
+
+  .contact-info {
+    margin-top: 3rem;
+    display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center;
+    position: relative; z-index: 1;
+  }
+  .contact-chip {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(201,162,39,0.08);
+    border: 1px solid rgba(201,162,39,0.2);
+    border-radius: 100px; padding: 0.5rem 1.2rem;
+    font-size: 0.85rem; color: var(--white);
+  }
+  .contact-chip span { color: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--plum-deep);
+    padding: 2rem 6vw;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(201,162,39,0.1);
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer img { height: 30px; }
+  footer p { font-size: 0.8rem; color: var(--muted); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── DIVIDER ── */
+  .gold-divider {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 2px;
+    margin-bottom: 2rem;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width: 768px) {
+    .stats-bar { grid-template-columns: repeat(2,1fr); }
+    .challenges-grid,
+    .features-grid,
+    .showcase-layout { grid-template-columns: 1fr; }
+    .showcase-layout.reverse { direction: ltr; }
+    nav .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <img src="https://www.emexotechnologies.com/wp-content/uploads/2020/02/emexo-logo.png" alt="Emexo Technologies">
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#curriculum">Curriculum</a>
+    <a href="#career">Career Tracks</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact" class="nav-cta">Enroll Now</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-badge">GitHub Technical Documentation Repository</div>
+
+  <h1>
+    Scalable <span>GenAI Integration</span><br>
+    Guide for Bengaluru<br>Engineering Hubs
+  </h1>
+
+  <p>
+    Developing corporate-grade, autonomous software systems requires a complete shift from running superficial API calls to understanding the deep mechanics of foundational architectures — bridging the gap between basic coding habits and production-ready systems.
+  </p>
+
+  <div class="hero-btns">
+    <a href="#contact" class="btn-primary">⚡ Start Your Journey</a>
+    <a href="#curriculum" class="btn-secondary">↓ Explore Curriculum</a>
+  </div>
+
+  <div class="hero-img-wrap">
+    <img src="https://raw.githubusercontent.com/emexo2026/Best-GenAI-Training-and-Placement-in-Electronic-City/refs/heads/main/corporate-genai-training-electronic-city.png"
+         alt="GenAI Training Electronic City Cover">
+  </div>
+
+  <div class="scroll-hint">SCROLL</div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item reveal">
+    <span class="stat-num">500+</span>
+    <span class="stat-label">Engineers Trained</span>
+  </div>
+  <div class="stat-item reveal">
+    <span class="stat-num">95%</span>
+    <span class="stat-label">Placement Rate</span>
+  </div>
+  <div class="stat-item reveal">
+    <span class="stat-num">50+</span>
+    <span class="stat-label">Corporate Partners</span>
+  </div>
+  <div class="stat-item reveal">
+    <span class="stat-num">4</span>
+    <span class="stat-label">Specialization Tracks</span>
+  </div>
+</div>
+
+<!-- CHALLENGES -->
+<section class="challenges" id="curriculum">
+  <div class="challenges-grid">
+    <div class="reveal">
+      <div class="section-label">Engineering Challenges</div>
+      <h2 class="section-title">Moving Past Tutorials to <span>Production</span> Implementations</h2>
+      <div class="gold-divider"></div>
+      <p class="section-sub">
+        Most online sandbox environments ignore the real-world operational challenges that surface during enterprise deployments — context window limits, high token costs, and low-latency requirements. A structured GenAI Course in Electronic City prepares engineers to design scalable, secure, and production-ready applications from day one.
+      </p>
+      <p style="color:var(--muted);line-height:1.8;font-size:0.95rem;">
+        Engineering teams must master advanced concepts like semantic embedding generation, vector space mathematical quantization, and fine-tuning. Modern learning hubs in Electronic City provide access to high-performance computing setups and expert instructors — helping engineers confidently master complex architectures.
+      </p>
+    </div>
+    <div class="reveal">
+      <img src="https://raw.githubusercontent.com/emexo2026/Best-GenAI-Training-and-Placement-in-Electronic-City/refs/heads/main/developer-genai-integration-roadmap.png"
+           alt="GenAI Developer Integration Roadmap">
+      <p class="img-caption">Developer GenAI Integration Roadmap — Advanced architectural workflows</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto 1rem;">
+    <div class="section-label">Advanced Architectural Specialization</div>
+    <h2 class="section-title">Top-Tier Expertise Across <span>All Critical Areas</span></h2>
+    <div class="gold-divider" style="margin:0 auto 1.5rem;"></div>
+    <p class="section-sub" style="margin:0 auto;">
+      Enrolling in the Best GenAI Training in Electronic City ensures that engineers develop production-grade expertise across every critical operational domain.
+    </p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">🔧</div>
+      <h3>Advanced Parameter Tuning</h3>
+      <p>Mastering low-rank adaptation methods like LoRA and QLoRA to safely train enterprise models on limited hardware — maximizing efficiency without costly infrastructure.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🗄️</div>
+      <h3>Production-Grade RAG Implementations</h3>
+      <p>Building resilient retrieval-augmented generation architectures using context-aware re-ranking models and hybrid data indexing for accurate enterprise responses.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🤖</div>
+      <h3>Autonomous Agent Orchestration</h3>
+      <p>Engineering multi-agent networks capable of using external tools, self-debugging code, and executing long-running business tasks with full observability.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">⚙️</div>
+      <h3>Enterprise LLMOps Pipelines</h3>
+      <p>Setting up secure automated testing, cost tracking, and safety guards for large-scale model deployments — ensuring compliance and production reliability.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE 1: Architecture Workflow -->
+<section class="showcase">
+  <div class="showcase-layout">
+    <div class="reveal">
+      <img src="https://raw.githubusercontent.com/emexo2026/Best-GenAI-Training-and-Placement-in-Electronic-City/refs/heads/main/data-workflows-genai-architecture.png"
+           alt="Data Workflows GenAI Architecture">
+      <p class="img-caption">Core architectural data workflows and parameter optimization strategies</p>
+    </div>
+    <div class="reveal">
+      <div class="section-label">Strategic Career Optimization</div>
+      <h2 class="section-title">Production-Level <span>Placements</span></h2>
+      <div class="gold-divider"></div>
+      <p style="color:var(--muted);line-height:1.8;margin-bottom:1.5rem;">
+        Developing advanced technical skills is most valuable when it translates into clear, measurable career growth. A complete <strong style="color:var(--white);">GenAI Training and Placement in Electronic City</strong> program ensures your hands-on coding skills are perfectly matched with premium job opportunities at leading global tech firms.
+      </p>
+      <p style="color:var(--muted);line-height:1.8;">
+        Earning an industry-aligned <strong style="color:var(--white);">GenAI Certification Course in Electronic City</strong> provides strong validation of your real-world expertise — giving engineering leads and recruiters full confidence in your readiness to manage complex enterprise deployments.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CAREER TRACKS -->
+<section class="career" id="career">
+  <div class="reveal">
+    <div class="section-label">Specialized Career Paths</div>
+    <h2 class="section-title">Localized Engineering <span>Tracks</span></h2>
+    <div class="gold-divider"></div>
+    <p class="section-sub">
+      Designed around the specific needs of Bengaluru's engineering ecosystem — from senior architects to fresh graduates.
+    </p>
+  </div>
+
+  <div class="track-list">
+    <div class="track-item reveal">
+      <div class="track-num">01</div>
+      <div class="track-content">
+        <h3>Targeted Professional Engineering Modules</h3>
+        <p>Senior developers, technical architects, and data leads require a fast-paced environment tailored specifically to their existing engineering foundations. The <strong style="color:var(--gold);">GenAI Training for Working Professionals Electronic City</strong> course bypasses elementary concepts to focus completely on low-latency execution, production scaling, and secure enterprise integration.</p>
+      </div>
+    </div>
+    <div class="track-item reveal">
+      <div class="track-num">02</div>
+      <div class="track-content">
+        <h3>High-Impact Career Acceleration Paths</h3>
+        <p>For professionals transitioning from legacy software development into Core Machine Learning or LLM Engineering roles, the <strong style="color:var(--gold);">Advanced GenAI Training for Software Engineers in Electronic City Phase 1</strong> program equips developers with deep technical expertise, architectural design patterns, and deployment strategies required to lead high-level technical teams.</p>
+      </div>
+    </div>
+    <div class="track-item reveal">
+      <div class="track-num">03</div>
+      <div class="track-content">
+        <h3>Project-Driven Portfolio Development</h3>
+        <p>True technical mastery is proven by launching live, secure, and production-ready applications. The <strong style="color:var(--gold);">Top Rated GenAI Training Electronic City</strong> center ensures every engineering module finishes with an enterprise project — building a robust GitHub portfolio with optimized architectures, low-latency API layers, and production-ready multi-agent networks.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image 3 here -->
+  <div class="reveal" style="margin-top:3rem;">
+    <img src="https://raw.githubusercontent.com/emexo2026/Best-GenAI-Training-and-Placement-in-Electronic-City/refs/heads/main/corporate-engineering-placement-roadmap.png"
+         alt="Corporate Engineering Placement Roadmap"
+         style="width:100%;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.5);">
+    <p class="img-caption" style="margin-top:0.75rem;text-align:center;">Comprehensive continuous placement roadmap and industry integration matrix — GenAI Training Center, Electronic City</p>
+  </div>
+</section>
+
+<!-- CORP UPSKILLING -->
+<section style="background:var(--plum-deep);padding:6rem 6vw;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;" class="challenges-grid">
+    <div class="reveal">
+      <div class="section-label">Corporate Up-Skilling Frameworks</div>
+      <h2 class="section-title">Maximizing <span>Technical ROI</span></h2>
+      <div class="gold-divider"></div>
+      <p style="color:var(--muted);line-height:1.8;margin-bottom:1.5rem;">Investing in an expert-led <strong style="color:var(--white);">GenAI Corporate Course Electronic City</strong> program helps development teams master advanced model alignment and deployment strategies, maximizing engineering efficiency.</p>
+      <p style="color:var(--muted);line-height:1.8;margin-bottom:1.5rem;">Graduations from a premier, accredited <strong style="color:var(--white);">GenAI Training Institute in Electronic City Bangalore</strong> connect engineers directly with local technology hubs — giving developers early access to exclusive hiring drives, high-level engineering roles, and strategic corporate partnerships.</p>
+    </div>
+    <div class="reveal">
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Direct Job Readiness & Placement Bootcamps</h3>
+          <p>Intensive mock interviews, resume optimization, and direct access to exclusive hiring drives across local tech hubs through a targeted <strong style="color:var(--gold);">GenAI Placement Training Electronic City</strong> program.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <h3>Career Transitions for Freshers</h3>
+          <p>A structured, step-by-step framework that simplifies complex ML concepts — covering token weights, prompt engineering, and secure vector setups before advanced model orchestration.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏆</div>
+          <h3>Focused Professional Engineering Goals</h3>
+          <p>A comprehensive, project-driven <strong style="color:var(--gold);">GenAI Career Program Electronic City</strong> provides verified technical proof and deep architectural experience that global firms demand.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="reveal" style="max-width:780px;margin:0 auto;">
+    <div class="section-label">Repository FAQ</div>
+    <h2 class="section-title">Frequently Asked <span>Technical Questions</span></h2>
+    <div class="gold-divider"></div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">
+          How do production projects handle hardware limits?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">The laboratory setups use advanced parameter-efficient training methods like LoRA and quantization. This allows students to successfully fine-tune large foundation models on standard cloud instances without needing expensive infrastructure.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          What vector databases and indexing strategies are explored?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">The course covers production configurations for Pinecone, Milvus, and ChromaDB. Students build and optimize advanced data retrieval pipelines using hybrid metadata filtering and context-aware re-ranking models.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          How does the certification validate real-world skills?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Validation requires building and defending a production-ready application portfolio — complete with low-latency API code, secure data privacy controls, and automated testing layers — before a panel of senior engineering mentors.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          Are corporate batch schedules flexible enough for on-call shifts?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">Yes, absolutely. We offer specialized weekend tracks and recorded interactive classroom sessions, giving developers the flexibility to pause and resume their practical labs whenever urgent deployment demands arise.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">
+          What corporate hiring networks are available?
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">We maintain direct partnerships with leading multinational corporations and modern product startups right here in Electronic City, scheduling exclusive recruitment drives and technical portfolio reviews for our graduates.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <h2>Ready to <span>Initialize</span><br>Your Advanced Career?</h2>
+  <p>Secure your seat at the leading GenAI Training Institute in Electronic City today.</p>
+  <a href="mailto:info@emexotechnologies.com" class="btn-primary">⚡ Enroll Now — Clone Repository</a>
+
+  <div class="contact-info">
+    <div class="contact-chip">📍 <span>Electronic City, Bangalore, India</span></div>
+    <div class="contact-chip">✉️ <span>info@emexotechnologies.com</span></div>
+    <div class="contact-chip">📞 <span>+91 95132 16462</span></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <img src="https://www.emexotechnologies.com/wp-content/uploads/2020/02/emexo-logo.png" alt="Emexo Technologies">
+  <p>© 2025 Emexo Technologies, Electronic City, Bangalore. All rights reserved.</p>
+  <p style="color:var(--gold);font-size:0.75rem;">GITHUB TECHNICAL DOCUMENTATION REPOSITORY</p>
+</footer>
+
+<script>
+  // Intersection Observer for reveal animations
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // Stat counter animation
+  function animateCount(el, target, suffix = '') {
+    let current = 0;
+    const increment = target / 60;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = Math.floor(current) + suffix;
+    }, 25);
+  }
+
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const nums = entry.target.querySelectorAll('.stat-num');
+        const targets = [500, 95, 50, 4];
+        const suffixes = ['+', '%', '+', ''];
+        nums.forEach((n, i) => animateCount(n, targets[i], suffixes[i]));
+        statsObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  const statsBar = document.querySelector('.stats-bar');
+  if (statsBar) statsObserver.observe(statsBar);
+
+  // Parallax orbs on mouse move
+  document.addEventListener('mousemove', (e) => {
+    const cx = e.clientX / window.innerWidth - 0.5;
+    const cy = e.clientY / window.innerHeight - 0.5;
+    document.querySelectorAll('.orb').forEach((orb, i) => {
+      const factor = (i + 1) * 15;
+      orb.style.transform = `translate(${cx * factor}px, ${cy * factor}px)`;
+    });
+  });
+</script>
+</body>
+</html>
